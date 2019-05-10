@@ -67,19 +67,20 @@ void ordenacao(){
         sprintf(oito_n, "oito_%d.dat", i);
         f = fopen(oito_n, "r");
         char em_ordem[20];
+        sprintf(em_ordem, "em_ordem%d.dat", i);
+        saida = fopen(em_ordem, "w");
         fseek (f, 0, SEEK_END);
         posicao = ftell(f);
         rewind(f);
         quantidade = posicao/sizeof(Endereco);
         e = (Endereco*) malloc (posicao);
         fread (e, sizeof(Endereco), quantidade, f);
+        fclose(f);
         qsort(e, quantidade, sizeof(Endereco), compara);
-        sprintf(em_ordem, "em_ordem%d.dat", i);
-        saida = fopen(em_ordem, "w");
         fwrite(e, sizeof(Endereco), quantidade, saida);
+        free(e);
         fclose(saida);
     }
-    fclose(f);
 }
 
 void intercalacao(){
@@ -140,7 +141,7 @@ void intercalacao(){
     j++;
 
     }
-rename("em_ordem15.dat", "final.dat");
+rename("em_ordem15.dat", "intercalado.dat");
 }
 
 void remocao(){
