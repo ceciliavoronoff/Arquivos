@@ -3,8 +3,8 @@
 
 typedef struct Entrada {
     char nis[15];
-    char numero[10];
-    char ponteiro[10];
+    long numero;
+    long ponteiro;
 } Entrada;
 
 int compara(const void *e1, const void *e2){
@@ -98,20 +98,10 @@ void coleta(){
         {
             if(coluna == 7)
             {
-                strcpy(nis, campo);
-                fprintf(saida, "%.15s\t", campo);
-                aux = ftell(saida);
-                printf("%d\n", aux);
-                numero = (char[])n;
-                //strcpy(numero, auxnumero);
-                fprintf(saida, "%.10s\t", numero);
-                aux = ftell(saida);
-                printf("%d\n", aux);
-                char auxponteiro = (char)posicao;
-                strcpy(ponteiro, auxponteiro);
-                fprintf(saida, "%.10s\t", ponteiro);
-                aux = ftell(saida);
-                printf("%d\n", aux);
+                strcpy(e.nis, campo);
+                e.numero = n;
+                e.ponteiro = posicao;
+                fwrite(&e, sizeof(Entrada), 1, saida);
             }
             coluna++;
             campo = strtok(NULL,"\t");
