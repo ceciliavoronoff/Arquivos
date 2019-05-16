@@ -71,10 +71,8 @@ void intercala(int j, int i){
 }
 
 void coleta(){
+    Entrada e;
     char linha[2048];
-    char nis[15];
-    char numero[10];
-    char ponteiro[10];
     long n = 1;
     int coluna = 0;
     long posicao;
