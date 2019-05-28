@@ -1,3 +1,6 @@
+// Escolhi fazer com a limitação de memória para pensar em maneiras de trabalhar com arquivos muito grandes,
+// que não poderiam ser processados de uma vez.
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
