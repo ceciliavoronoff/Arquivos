@@ -28,6 +28,7 @@ void ordena(int i){
         if (quantidade == 0){
             fclose(coleta);
             remove(entradas);
+            i--;
         } else if (quantidade == 1){
             fclose(coleta);
             char ordenados[20];
@@ -64,41 +65,33 @@ void intercala(int i){
         b = fopen(segundo,"r");
         saida = fopen(retorno,"w");
     
-        fseek(a, 0, SEEK_END);
-        long quantidade = ftell(a) / sizeof(Entrada);
-        rewind(a);
-        fseek(b, 0, SEEK_END);
-        quantidade += ftell(b) / sizeof(Entrada);
-        rewind(b);
         fread(&ea,sizeof(Entrada),1,a);
         fread(&eb,sizeof(Entrada),1,b);
     
-        for (int k = 0; k <= quantidade; k++){
-            if (feof(a) && feof(b)){
-                break;
-            } else if (feof(a)){
-                fwrite(&eb, sizeof(Entrada), 1,saida);
-                fread(&eb, sizeof(Entrada), 1, b);        
-            } else if (feof(b)){
-                fwrite(&a, sizeof(Entrada), 1, saida);
+        while (!feof(a) && !feof(b)){
+            if (compara(&ea, &eb) < 0) {
+                fwrite(&ea, sizeof(Entrada), 1, saida);
                 fread(&ea, sizeof(Entrada), 1, a);
             } else {
-                if (compara(&ea, &eb) < 0) {
-                    fwrite(&ea, sizeof(Entrada), 1, saida);
-                    fread(&ea, sizeof(Entrada), 1, a);
-                } else {
-                    fwrite(&eb, sizeof(Entrada), 1, saida);
-                    fread(&eb, sizeof(Entrada), 1, b);
-                }   
+                fwrite(&eb, sizeof(Entrada), 1, saida);
+                fread(&eb, sizeof(Entrada), 1, b);                }
             }
         }
-        fclose(a);
-        remove(primeiro);
-        fclose(b);
-        remove(segundo);
-        fclose(saida);
-        j++;
-        i++;
+        while (!feof(a)){
+            fwrite(&a, sizeof(Entrada), 1, saida);
+            fread(&ea, sizeof(Entrada), 1, a);
+        }
+        while (!feof(b)){
+            fwrite(&eb, sizeof(Entrada), 1,saida);
+            fread(&eb, sizeof(Entrada), 1, b);
+        }
+    fclose(a);
+    remove(primeiro);
+    fclose(b);
+    remove(segundo);
+    fclose(saida);
+    j++;
+    i++;
     }
 sprintf(retorno, "ordenados_%d.bin", j);
 rename(retorno, "indice.bin");
