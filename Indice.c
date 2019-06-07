@@ -74,7 +74,7 @@ void intercala(int i){
                 fread(&ea, sizeof(Entrada), 1, a);
             } else {
                 fwrite(&eb, sizeof(Entrada), 1, saida);
-                fread(&eb, sizeof(Entrada), 1, b);                }
+                fread(&eb, sizeof(Entrada), 1, b);
             }
         }
         while (!feof(a)){
