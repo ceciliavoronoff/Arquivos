@@ -8,6 +8,82 @@ typedef struct Entrada {
     long ponteiro;
 } Entrada;
 
+typedef struct EntradaHash {
+    long ponteiroHash;
+    Entrada entr;
+} EntradaHash;
+
+void criaHash(){
+    long tamanhoTabela = 13000081;
+    Entrada e;
+    EntradaHash eh;
+    FILE *indice, *tabelaHash;
+    long preenchido[tamanhoTabela] = {0};
+    long indiceHash, ponteiroAux;
+    eh.ponteiroHash = NULL;
+    eh.nis = NULL;
+    eh.ponteiro = NULL;
+    tabelaHash = fopen("tabelaHash.bin", "rb+");
+    fwrite(aux, sizeof(EntradaHash), tamanhoTabela, tabelaHash);
+    indice = fopen("indice.bin", "r");
+    while (fread(e, sizeof(Entrada), 1, indice)){
+        if (feof(indice))
+        break;
+        indiceHash = e.nis/tamanhoTabela;
+        long posicao = indiceHash * sizeof(EntradaHash);
+        eh.entr = e;
+        if (preenchido[indiceHash] == 0){
+            eh.ponteiroHash = posicao;
+            fseek(tabelaHash, 0, posicao);
+            fwrite(eh, sizeof(EntradaHash), 1, tabelaHash);
+        } else {
+            eh.ponteiroHash = preenchido[indiceHash];
+            fseek(tabelaHash, 0, SEEK_END);
+            ponteiroAux = ftell(tabelaHash);
+            fwrite(eh, sizeof(EntradaHash), 1, tabelaHash);
+            preenchido[indiceHash] = ponteiroAux;
+            posicao = ponteiroAux * sizeof(EntradaHash);
+            fseek(tabelaHash, 0, posicao);
+            fread(eh, sizeof(EntradaHash), 1, tabelaHash);
+            eh.ponteiroHash = ponteiroAux;
+            fseek(tabelaHash, -sizeof(EntradaHash), SEEK_CUR);
+            fwrite(eh, sizeof(EntradaHash), 1, tabelaHash);
+        }
+    }
+    fclose(indice);
+    fclose(tabelaHash);    
+}
+
+int compara(const void *e1, const void *e2){
+    return strncmp(((Entrada*)e1)->nis, ((EntradaHash*)e2)->nis, 14);
+}
+
+void buscaHash(){
+    Entrada e;
+    EntradaHash eh;
+    long indiceHash, posicao, tamanhoTabela = 13000081;;
+    clock_t tInicio, tFim, tTotal;
+    criaHash();
+    FILE *amostra = fopen("amostra.bin", "r");
+    FILE *tabelaHash = fopen("tabelaHash.bin", "r");
+    tInicio = clock();
+    for (int i = 0; i < 1000; i++){
+        fread(&e, sizeof(Entrada), 1, amostra);
+        indiceHash = e.nis/tamanhoTabela;
+        fseek(tabelaHash, 0, indiceHash);
+        fread(&eh, sizeof(EntradaHash), 1, tabelaHash);
+        if (strncmp(e.nis, eh.nis, 14) == 0){
+            break;
+        } else {
+            
+        }
+        }
+    }
+    tFim = clock();
+    tTotal = tFim - tInicio;
+    printf("Tempo da Busca Binária: %fs\n", (double)tTotal/CLOCKS_PER_SEC);
+}
+
 int compara(const void *e1, const void *e2){
     return strncmp(((Entrada*)e1)->nis, ((Entrada*)e2)->nis, 14);
 }
@@ -103,7 +179,8 @@ void criaIndice(){
 
 int main(int argc, char** argv){
 	criaIndice();
-    //criaAmostra();
-    ordenaIndice();
+    criaAmostra();
+    buscaBinaria();
+    criaHash();
     return 0;
 }
