@@ -54,10 +54,6 @@ void criaHash(){
     fclose(tabelaHash);    
 }
 
-int compara(const void *e1, const void *e2){
-    return strncmp(((Entrada*)e1)->nis, ((EntradaHash*)e2)->nis, 14);
-}
-
 void buscaHash(){
     Entrada e;
     EntradaHash eh;
@@ -70,18 +66,15 @@ void buscaHash(){
     for (int i = 0; i < 1000; i++){
         fread(&e, sizeof(Entrada), 1, amostra);
         indiceHash = e.nis/tamanhoTabela;
-        fseek(tabelaHash, 0, indiceHash);
-        fread(&eh, sizeof(EntradaHash), 1, tabelaHash);
-        if (strncmp(e.nis, eh.nis, 14) == 0){
-            break;
-        } else {
-            
-        }
+        while (indiceHash != NULL){
+            fseek(tabelaHash, 0, indiceHash);
+            fread(&eh, sizeof(EntradaHash), 1, tabelaHash);
+            indiceHash = eh.ponteiroHash;
         }
     }
     tFim = clock();
     tTotal = tFim - tInicio;
-    printf("Tempo da Busca Binária: %fs\n", (double)tTotal/CLOCKS_PER_SEC);
+    printf("Tempo da Busca em Tabela Hash: %fs\n", (double)tTotal/CLOCKS_PER_SEC);
 }
 
 int compara(const void *e1, const void *e2){
@@ -181,6 +174,6 @@ int main(int argc, char** argv){
 	criaIndice();
     criaAmostra();
     buscaBinaria();
-    criaHash();
+    buscaHash();
     return 0;
 }
