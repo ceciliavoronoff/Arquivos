@@ -14,8 +14,7 @@ struct _Endereco
     char lixo[2];
 };
 
-int main(int argc, char**argv)
-{
+void buscaBinaria(){
     FILE *f;
     Endereco e;
     long inicio, meio, fim;
@@ -59,4 +58,10 @@ int main(int argc, char**argv)
     }
     printf("Total Lido: %d\n", c);
     fclose(f);
+}
+
+int main(int argc, char**argv){
+    buscaBinaria();
+    
+    return 0;
 }
